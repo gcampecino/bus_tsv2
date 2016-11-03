@@ -12,7 +12,7 @@ class BusStop extends Model
 
 
     /**
-     * Get the comments for the blog post.
+     * Get the schedules.
      */
     public function buStopSchedule()
     {

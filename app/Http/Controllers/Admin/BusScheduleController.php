@@ -35,8 +35,8 @@ class BusScheduleController extends Controller
      */
     public function store(Request $request)
     {
-        if(Gate::denies('/bus-schedule/store'))
-            return redirect('/bus-search');
+        // if(Gate::denies('/bus-schedule/store'))
+        //     return redirect('/bus-search');
 
         $busStopSchedule = new BusStopSchedule;
         $busStopSchedule->bus_id = $request->bus_id;

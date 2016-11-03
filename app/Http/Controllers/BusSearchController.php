@@ -17,37 +17,39 @@ class BusSearchController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
 
     /**
      * Show the application dashboard.
      *
      * @return [
-	 * 		[id => 1,
-	 * 		name => 'Statoin 1',
-	 * 		description => 'Desc',
-	 * 		distanceFromUser => 11.30012,
-	 *		buses => [
-				[day => 'Sunday',
-					time => '08:00',
-					name => 'Cisra',
-					bus_desc => 'Blue bus',
-					sched_desc => 'Notice desc'],
-				[day => 'Sunday',
-					time => '08:00',
-					name => 'Cisra',
-					bus_desc => 'Blue bus',
-					sched_desc => 'Notice desc']
-			]
-	 * ]]
+     * 		[id => 1,
+     * 		name => 'Statoin 1',
+     * 		description => 'Desc',
+     * 		distanceFromUser => 11.30012,
+     *		buses => [
+		 *		[day => 'Sunday',
+		 *			time => '08:00',
+		 *			name => 'Cisra',
+		 *			bus_desc => 'Blue bus',
+		 *			sched_desc => 'Notice desc'],
+		 *		[day => 'Sunday',
+		 *			time => '08:00',
+		 *			name => 'Cisra',
+		 *			bus_desc => 'Blue bus',
+		 *			sched_desc => 'Notice desc']
+		 *	]
+	   * ]]
      */
     public function index()
     {
-		//check authorization
-        if(Gate::denies('bus-search'))
-            return redirect('/bus');
-
+		    //check authorization
+        // if(Gate::denies('bus-search'))
+        //     return redirect('/bus');
+        // if (Gate::denies('index')) {
+        //     return redirect('/bus');
+        // }
         //user location
         $latitude = 1.299430;
         $longitude = 103.855669;
@@ -60,6 +62,23 @@ class BusSearchController extends Controller
                     ->orderBy('distanceFromUser', 'asc')
                     ->get();
 
+        $busStopsIds = $this->getArrData($busStops, 'id');
+
+          //get all bus assigned to the bus stop
+         $busStopScheds = DB::table('bus_stop_schedule')
+             ->leftJoin('bus', 'bus.id', '=', 'bus_stop_schedule.bus_id')
+             ->select(
+                     'bus_stop_schedule.bus_stop_id',
+                     'bus_stop_schedule.day',
+                     'bus_stop_schedule.time',
+                     'bus_stop_schedule.description as sched_desc',
+                     'bus.name',
+                     'bus.description as bus_desc'
+                     )
+             ->whereIn('bus_stop_id', $busStopsIds)//('bus_stop_id', $busStop->id)
+             ->orderByRaw(DB::raw("FIELD(bus_stop_schedule.day, 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'), `bus_stop_schedule`.`time` asc"))
+             ->get();
+
         //map busses scheduled in the bus stop
         $schedules = [];
         foreach ($busStops as $busStop) {
@@ -69,30 +88,18 @@ class BusSearchController extends Controller
                 'description' => $busStop->description,
                 'distanceFromUser' => $busStop->distanceFromUser
             ];
-
-			//get all bus assigned to the bus stop
-            $busStopScheds = DB::table('bus_stop_schedule')
-                ->leftJoin('bus', 'bus.id', '=', 'bus_stop_schedule.bus_id')
-                ->select(
-                        'bus_stop_schedule.day',
-                        'bus_stop_schedule.time',
-                        'bus_stop_schedule.description as sched_desc',
-                        'bus.name',
-                        'bus.description as bus_desc'
-                        )
-                ->where('bus_stop_id', $busStop->id)
-                ->orderByRaw(DB::raw("FIELD(bus_stop_schedule.day, 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'), `bus_stop_schedule`.`time` asc"))
-                ->get();
-
             $buses = [];
             foreach ($busStopScheds as $busStopSched) {
-                $buses[] = [
-                    'day' => $busStopSched->day,
-                    'time' => $busStopSched->time,
-                    'name' => $busStopSched->name,
-                    'bus_desc' => $busStopSched->bus_desc,
-                    'sched_desc' => $busStopSched->sched_desc
-                ];
+                if($busStopSched->bus_stop_id == $busStop->id)
+                {
+                  $buses[] = [
+                      'day' => $busStopSched->day,
+                      'time' => $busStopSched->time,
+                      'name' => $busStopSched->name,
+                      'bus_desc' => $busStopSched->bus_desc,
+                      'sched_desc' => $busStopSched->sched_desc
+                  ];
+                }
             }
 
             $bstop['buses'] = $buses;
@@ -100,5 +107,13 @@ class BusSearchController extends Controller
         }
 
         return view('bus.search', ['schedules' => $schedules]);
+    }
+
+    protected function getArrData($array, $key){
+      $retArr = [];
+      foreach($array as $value){
+        $retArr[] = $value->{$key};
+      }
+      return $retArr;
     }
 }

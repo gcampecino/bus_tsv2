@@ -11,7 +11,7 @@ class Bus extends Model
     public $timestamps = true;
 
     /**
-     * Get the comments for the blog post.
+     * Get the schedules
      */
     public function schedules()
     {

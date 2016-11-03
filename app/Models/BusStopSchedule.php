@@ -11,7 +11,7 @@ class BusStopSchedule extends Model
     public $timestamps = true;
 
     /**
-     * Get the post that owns the comment.
+     * Get the bus stop.
      */
     public function busStop()
     {
@@ -19,7 +19,7 @@ class BusStopSchedule extends Model
     }
 
     /**
-     * Get the post that owns the comment.
+     * Get the bus.
      */
     public function bus()
     {

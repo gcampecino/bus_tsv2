@@ -23,34 +23,34 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->registerPolicies();
-
-        Gate::define('bus-search', function ($user) {
-            return $user->is_admin == 0;
-        });
-
-        Gate::define('bus', function ($user) {
-            return $user->is_admin == 1;
-        });
-
-        Gate::define('/bus/create', function ($user) {
-            return $user->is_admin == 1;
-        });
-
-        Gate::define('/bus/store', function ($user) {
-            return $user->is_admin == 1;
-        });
-
-        Gate::define('/bus/show/{id}', function ($user) {
-            return $user->is_admin == 1;
-        });
-
-        Gate::define('/bus/update/{id}', function ($user) {
-            return $user->is_admin == 1;
-        });
-
-        Gate::define('/bus-schedule/store', function ($user) {
-            return $user->is_admin == 1;
-        });
+        // $this->registerPolicies();
+        //
+        // Gate::define('bus-search', function ($user) {
+        //     return $user->is_admin == 0;
+        // });
+        //
+        // Gate::define('bus', function ($user) {
+        //     return $user->is_admin == 1;
+        // });
+        //
+        // Gate::define('/bus/create', function ($user) {
+        //     return $user->is_admin == 1;
+        // });
+        //
+        // Gate::define('/bus/store', function ($user) {
+        //     return $user->is_admin == 1;
+        // });
+        //
+        // Gate::define('/bus/show/{id}', function ($user) {
+        //     return $user->is_admin == 1;
+        // });
+        //
+        // Gate::define('/bus/update/{id}', function ($user) {
+        //     return $user->is_admin == 1;
+        // });
+        //
+        // Gate::define('/bus-schedule/store', function ($user) {
+        //     return $user->is_admin == 1;
+        // });
     }
 }

@@ -26,19 +26,19 @@ class BusController extends Controller
      * Display a listing of the resource.
      *
      * @return [
-		[
-			name => 'Bus A',
-			desc => 'Bus A desc',
-		],[
-			name => 'Bus B',
-			desc => 'Bus B desc',
-		],
-	 ]
+		 * [
+  	 *  name => 'Bus A',
+  	 *  desc => 'Bus A desc',
+		 * ],[
+		 * 	name => 'Bus B',
+		 * 	desc => 'Bus B desc',
+	   * ],
+	   * ]
      */
     public function index()
     {
-        if(Gate::denies('bus'))
-            return redirect('/bus-search');
+        // if(Gate::denies('bus'))
+        //     return redirect('/bus-search');
 
         $buses = Bus::all();
 
@@ -52,8 +52,8 @@ class BusController extends Controller
      */
     public function create()
     {
-        if(Gate::denies('/bus/create'))
-            return redirect('/bus-search');
+        // if(Gate::denies('/bus/create'))
+        //     return redirect('/bus-search');
 
         return view('admin.bus.detail');
     }
@@ -64,8 +64,8 @@ class BusController extends Controller
      */
     public function store(Request $request)
     {
-        if(Gate::denies('/bus/store'))
-            return redirect('/bus-search');
+        // if(Gate::denies('/bus/store'))
+        //     return redirect('/bus-search');
 
         $this->validate($request, [
                 'name' => 'required'
@@ -85,8 +85,8 @@ class BusController extends Controller
      */
     public function show($id)
     {
-        if(Gate::denies('/bus/show/{id}'))
-            return redirect('/bus-search');
+        // if(Gate::denies('/bus/show/{id}'))
+        //     return redirect('/bus-search');
 
         $bus = Bus::find($id);
         $busStops = BusStop::all();
@@ -114,8 +114,8 @@ class BusController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if(Gate::denies('/bus/update/{id}'))
-            return redirect('/bus-search');
+        // if(Gate::denies('/bus/update/{id}'))
+        //     return redirect('/bus-search');
 
         $this->validate($request, [
                 'name' => 'required'
