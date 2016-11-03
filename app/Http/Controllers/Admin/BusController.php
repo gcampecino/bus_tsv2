@@ -18,7 +18,7 @@ class BusController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        //$this->middleware('auth');
 
     }
 
@@ -74,7 +74,11 @@ class BusController extends Controller
         $bus = new Bus;
         $bus->name = $request->name;
         $bus->description = $request->description;
-        $bus->save();
+        $saved = $bus->save();
+
+        if(!$saved){
+            abort(500, 'Error saving');
+        }
 
          return redirect('/bus/show/'.$bus->id);
     }
@@ -124,7 +128,10 @@ class BusController extends Controller
         $bus = Bus::find($id);
         $bus->name = $request->name;
         $bus->description = $request->description;
-        $bus->save();
+        $saved = $bus->save();
+        if(!$saved){
+            abort(500, 'Error saving');
+        }
 
          return redirect('/bus/show/'.$bus->id);
     }

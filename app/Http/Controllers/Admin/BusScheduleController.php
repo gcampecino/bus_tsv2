@@ -44,8 +44,11 @@ class BusScheduleController extends Controller
         $busStopSchedule->day = $request->day;
         $busStopSchedule->time = $request->time;
         $busStopSchedule->description = $request->description;
-        $busStopSchedule->save();
+        $saved = $busStopSchedule->save();
 
+        if(!$saved){
+            abort(500, 'Error saving');
+        }
         return redirect('/bus/show/'.$busStopSchedule->bus_id);
     }
 
